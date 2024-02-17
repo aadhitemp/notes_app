@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:notesapp/constants/routes.dart';
 import 'package:notesapp/helpers/loading/loading_screen.dart';
-
-//import 'package:notesapp/services/auth/auth_service.dart';
 import 'package:notesapp/services/auth/bloc/auth_bloc.dart';
 import 'package:notesapp/services/auth/bloc/auth_events.dart';
 import 'package:notesapp/services/auth/bloc/auth_state.dart';
@@ -16,14 +13,10 @@ import 'package:notesapp/views/notes/notes_view.dart';
 import 'package:notesapp/views/register_view.dart';
 import 'package:notesapp/views/verify_email_view.dart';
 
-/*void main() {
-  runApp(const MyApp());
-}*/
 void main() {
-  // This was done so, that the whole thing doesn't have to be rebuild
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MaterialApp(
-    title: 'Flutter Demo',
+    title: 'Notes Application',
     theme: ThemeData(
       colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       useMaterial3: true,
@@ -33,10 +26,6 @@ void main() {
       child: const HomePage(),
     ),
     routes: {
-      // loginRoute: (context) => const LoginView(),
-      // registerRoute: (context) => const RegisterView(),
-      // notesRoute: (context) => const NotesView(),
-      // verifyEmailRoute: (context) => const VerifyEmailView(),
       createOrUpdateNoteRoute: (context) => const CreateUpdateNoteView()
     },
   ));
@@ -77,27 +66,5 @@ class HomePage extends StatelessWidget {
         }
       },
     );
-
-    // return FutureBuilder(
-    //   future: AuthService.firebase().initialize(),
-    //   builder: (context, snapshot) {
-    //     switch (snapshot.connectionState) {
-    //       case ConnectionState.done:
-    //         final user = AuthService.firebase().currentUser;
-    //         if (user != null) {
-    //           if (user.isEmailVerified) {
-    //             return const NotesView();
-    //           } else {
-    //             return const VerifyEmailView();
-    //           }
-    //         } else {
-    //           return const LoginView();
-    //         }
-
-    //       default:
-    //         return const CircularProgressIndicator();
-    //     }
-    //   },
-    // );
   }
 }

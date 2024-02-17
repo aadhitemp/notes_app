@@ -17,14 +17,15 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-  late final TextEditingController
-      _email; //We need stateful widgets to use late fields
+  late final TextEditingController _email;
   late final TextEditingController _password;
+  late final TextEditingController _passwordcheck;
 
   @override
   void initState() {
     _email = TextEditingController();
     _password = TextEditingController();
+    _passwordcheck = TextEditingController();
     super.initState();
   }
 
@@ -32,6 +33,7 @@ class _RegisterViewState extends State<RegisterView> {
   void dispose() {
     _email.dispose();
     _password.dispose();
+    _passwordcheck.dispose();
     super.dispose();
   }
 
@@ -52,82 +54,137 @@ class _RegisterViewState extends State<RegisterView> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Register'),
-        ),
         body: FutureBuilder(
             future: AuthService.firebase().initialize(),
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.done:
-                  return Column(
-                    children: [
-                      TextField(
-                        controller: _email,
-                        enableSuggestions: false,
-                        autocorrect: false,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: const InputDecoration(
-                            hintText: 'Enter your email here'),
-                      ),
-                      TextField(
-                        controller: _password,
-                        obscureText: true,
-                        enableSuggestions: false,
-                        autocorrect: false,
-                        decoration:
-                            const InputDecoration(hintText: 'Password here'),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          final email = _email.text;
-                          final password = _password.text;
-                          context
-                              .read<AuthBloc>()
-                              .add(AuthEventRegister(email, password));
-                          //   try {
-                          //     await AuthService.firebase()
-                          //         .createUser(email: email, password: password);
-                          //     AuthService.firebase().sendEmailVerification();
-                          //     Navigator.of(context).pushNamed(verifyEmailRoute);
-                          //   } on WeakPasswordAuthException {
-                          //     await showErrorDialog(
-                          //       context,
-                          //       'Weak Password',
-                          //     );
-                          //   } on EmailAlreadyInUseAuthException {
-                          //     await showErrorDialog(
-                          //       context,
-                          //       'Email already in Use',
-                          //     );
-                          //   } on InvalidEmailAuthException {
-                          //     await showErrorDialog(
-                          //       context,
-                          //       'Invalid Email',
-                          //     );
-                          //   } on GenericAuthException {
-                          //     await showErrorDialog(
-                          //       context,
-                          //       'Failed to Register',
-                          //     );
-                          //   }
-                          // },
-                        },
-                        child: const Text('Register'),
-                      ),
-                      TextButton(
-                          onPressed: () {
-                            // Navigator.of(context).pushNamedAndRemoveUntil(
-                            //     loginRoute, (route) => false);
-                            context
-                                .read<AuthBloc>()
-                                .add(const AuthEventLogOut());
-                          },
-                          child: const Text('Already registered? Login here'))
-                    ],
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    height: MediaQuery.of(context).size.height - 50,
+                    width: double.infinity,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Column(
+                          children: <Widget>[
+                            const SizedBox(height: 60.0),
+                            const Text(
+                              "Sign up",
+                              style: TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Create your account",
+                              style: TextStyle(
+                                  fontSize: 15, color: Colors.grey[700]),
+                            )
+                          ],
+                        ),
+                        TextField(
+                          controller: _email,
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration(
+                              hintText: "Email",
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(18),
+                                  borderSide: BorderSide.none),
+                              fillColor: Colors.purple.withOpacity(0.1),
+                              filled: true,
+                              prefixIcon: const Icon(Icons.email)),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        TextField(
+                          controller: _password,
+                          obscureText: true,
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          decoration: InputDecoration(
+                            hintText: "Password",
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(18),
+                                borderSide: BorderSide.none),
+                            fillColor: Colors.purple.withOpacity(0.1),
+                            filled: true,
+                            prefixIcon: const Icon(Icons.password),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        TextField(
+                          controller: _passwordcheck,
+                          obscureText: true,
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          decoration: InputDecoration(
+                            hintText: "Confirm Password",
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(18),
+                                borderSide: BorderSide.none),
+                            fillColor: Colors.purple.withOpacity(0.1),
+                            filled: true,
+                            prefixIcon: const Icon(Icons.password),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(top: 3, left: 3),
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              final email = _email.text;
+                              final password = _password.text;
+                              context
+                                  .read<AuthBloc>()
+                                  .add(AuthEventRegister(email, password));
+                            },
+                            style: ElevatedButton.styleFrom(
+                              shape: const StadiumBorder(),
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              backgroundColor: Colors.purple,
+                            ),
+                            child: const Text(
+                              "Sign up",
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text('Already have an account?'),
+                            TextButton(
+                                onPressed: () {
+                                  context
+                                      .read<AuthBloc>()
+                                      .add(const AuthEventLogOut());
+                                },
+                                child: const Text(
+                                  "Login",
+                                  style: TextStyle(
+                                    color: Colors.purple,
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ],
+                    ),
                   );
                 default:
-                  return const Text('Loading..');
+                  return const Center(child: Text('Loading..'));
               }
             }),
       ),

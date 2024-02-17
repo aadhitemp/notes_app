@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-//import 'package:notesapp/constants/routes.dart';
 import 'package:notesapp/services/auth/auth_exceptions.dart';
 import 'package:notesapp/services/auth/auth_service.dart';
 import 'package:notesapp/services/auth/bloc/auth_bloc.dart';
 import 'package:notesapp/services/auth/bloc/auth_events.dart';
 import 'package:notesapp/services/auth/bloc/auth_state.dart';
-//import 'package:notesapp/utilities/dialogs/loading_dialog.dart';
 import '../utilities/dialogs/error_dialog.dart';
 
 class LoginView extends StatefulWidget {
@@ -63,96 +61,120 @@ class _HomePageState extends State<LoginView> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Register'),
-        ),
         body: FutureBuilder(
             future: AuthService.firebase().initialize(),
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.done:
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      TextField(
-                        controller: _email,
-                        enableSuggestions: false,
-                        autocorrect: false,
-                        autofocus: true,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: const InputDecoration(
-                            hintText: 'Enter your email here'),
-                      ),
-                      TextField(
-                        controller: _password,
-                        obscureText: true,
-                        enableSuggestions: false,
-                        autocorrect: false,
-                        decoration:
-                            const InputDecoration(hintText: 'Password here'),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          final email = _email.text;
-                          final password = _password.text;
-                          context
-                              .read<AuthBloc>()
-                              .add(AuthEventLogIn(email, password));
-                          //try {
-                          // final userCredential = await AuthService.firebase()
-                          //     .logIn(email: email, password: password);
-                          // final user = AuthService.firebase().currentUser;
-                          // if (user?.isEmailVerified ?? false) {
-                          //   devtools.log(userCredential.toString());
-                          //   Navigator.of(context).pushNamedAndRemoveUntil(
-                          //     notesRoute,
-                          //     (route) => false,
-                          //   );
-                          // } else {
-                          //   Navigator.of(context).pushNamedAndRemoveUntil(
-                          //     verifyEmailRoute,
-                          //     (route) => false,
-                          //   );
-                          // }
-                          //   } on UserNotFoundAuthException {
-                          //     await showErrorDialog(
-                          //       context,
-                          //       'User not found',
-                          //     );
-                          //   } on WrongPasswordAuthException {
-                          //     await showErrorDialog(
-                          //       context,
-                          //       'Wrong Credentials', //injecting something inside a string ${}
-                          //     );
-                          //   } on GenericAuthException {
-                          //     await showErrorDialog(
-                          //       context,
-                          //       'Authentication Error',
-                          //     );
-                          //   }
-                          // },
-                        },
-                        child: const Text('Login'),
-                      ),
-                      TextButton(
-                          onPressed: () {
-                            context.read<AuthBloc>().add(
-                                  const AuthEventForgotPassword(),
-                                );
-                          },
-                          child: const Text('Forgot Password?')),
-                      TextButton(
-                          onPressed: () {
-                            // Navigator.of(context).pushNamedAndRemoveUntil(
-                            //     registerRoute, (route) => false);
-                            context.read<AuthBloc>().add(
-                                  const AuthEvenShouldRegister(),
-                                );
-                          },
-                          child:
-                              const Text('Not Registered yet? Register here'))
-                    ],
+                  return Container(
+                    margin: const EdgeInsets.all(24),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Column(
+                          children: [
+                            Text(
+                              "Welcome Back",
+                              style: TextStyle(
+                                  fontSize: 40, fontWeight: FontWeight.bold),
+                            ),
+                            Text("Enter your credential to login"),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            TextField(
+                              controller: _email,
+                              enableSuggestions: false,
+                              autocorrect: false,
+                              autofocus: true,
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: InputDecoration(
+                                hintText: 'Enter your email here',
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(18),
+                                    borderSide: BorderSide.none),
+                                fillColor: Colors.purple.withOpacity(0.1),
+                                filled: true,
+                                prefixIcon: const Icon(Icons.email),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            TextField(
+                              controller: _password,
+                              obscureText: true,
+                              enableSuggestions: false,
+                              autocorrect: false,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(18),
+                                    borderSide: BorderSide.none),
+                                fillColor: Colors.purple.withOpacity(0.1),
+                                filled: true,
+                                hintText: 'Password here',
+                                prefixIcon: const Icon(Icons.password),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            ElevatedButton(
+                                onPressed: () async {
+                                  final email = _email.text;
+                                  final password = _password.text;
+                                  context
+                                      .read<AuthBloc>()
+                                      .add(AuthEventLogIn(email, password));
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  shape: const StadiumBorder(),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 10),
+                                  backgroundColor: Colors.purple,
+                                ),
+                                child: const Text(
+                                  "Login",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                  ),
+                                )),
+                          ],
+                        ),
+                        TextButton(
+                            onPressed: () {
+                              context.read<AuthBloc>().add(
+                                    const AuthEventForgotPassword(),
+                                  );
+                            },
+                            child: const Text(
+                              'Forgot Password?',
+                              style: TextStyle(
+                                color: Colors.purple,
+                              ),
+                            )),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text("Dont have an account?"),
+                            TextButton(
+                                onPressed: () {
+                                  // Navigator.of(context).pushNamedAndRemoveUntil(
+                                  //     registerRoute, (route) => false);
+                                  context.read<AuthBloc>().add(
+                                        const AuthEvenShouldRegister(),
+                                      );
+                                },
+                                child: const Text(
+                                  "Sign Up",
+                                  style: TextStyle(
+                                    color: Colors.purple,
+                                  ),
+                                ))
+                          ],
+                        )
+                      ],
+                    ),
                   );
                 default:
                   return const Text('Loading..');
